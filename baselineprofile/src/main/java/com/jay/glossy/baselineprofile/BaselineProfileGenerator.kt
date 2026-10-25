@@ -184,7 +184,7 @@ class BaselineProfileGenerator {
     }
 
     companion object {
-        private const val PACKAGE_NAME = "com.jay.glossy"
+        private const val PACKAGE_NAME = "com.jay.glossyw"
         private const val UI_TIMEOUT_MS = 10_000L
         private const val IDLE_TIMEOUT_MS = 2_000L
     }

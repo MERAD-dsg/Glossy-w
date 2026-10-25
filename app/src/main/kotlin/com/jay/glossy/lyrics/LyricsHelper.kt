@@ -32,6 +32,15 @@ import javax.inject.Inject
 
 private const val MAX_LYRICS_FETCH_MS = 12000L
 private const val PER_PROVIDER_TIMEOUT_MS = 3500L
+
+/**
+ * Musixmatch answers a lookup in several requests in a row (search, then the
+ * lyric formats), and a cold session also has to read its signing secret from
+ * the web app first. On the shared 3.5s budget that chain was cut short, so a
+ * song it could answer came back empty. Like Spotify it gets a budget of its own,
+ * inside the same [MAX_LYRICS_FETCH_MS] ceiling.
+ */
+private const val MUSIXMATCH_PROVIDER_TIMEOUT_MS = 6000L
 private const val PROVIDER_NONE = ""
 
 /**
@@ -59,7 +68,11 @@ private const val SPOTIFY_PROVIDER_TIMEOUT_MS = 6000L
 /** The leash one provider's lookup runs on. See [SPOTIFY_PROVIDER_TIMEOUT_MS]. */
 private val LyricsProvider.lookupBudgetMs: Long
     get() =
-        if (this is SpotifyLyricsProvider) SPOTIFY_PROVIDER_TIMEOUT_MS else PER_PROVIDER_TIMEOUT_MS
+        when (this) {
+            is SpotifyLyricsProvider -> SPOTIFY_PROVIDER_TIMEOUT_MS
+            is MusixmatchLyricsProvider -> MUSIXMATCH_PROVIDER_TIMEOUT_MS
+            else -> PER_PROVIDER_TIMEOUT_MS
+        }
 
 /**
  * How long a plain-text answer is held back while the other racing providers get
@@ -117,8 +130,6 @@ constructor(
      * race and the caches.
      */
     suspend fun getLyrics(mediaMetadata: MediaMetadata, forceRefresh: Boolean = false): LyricsWithProvider {
-        currentLyricsJob?.cancel()
-
         val songKey = "${mediaMetadata.artists.joinToString { it.name }}-${mediaMetadata.title}".replace(" ", "").lowercase()
 
         // Check memory cache first (instant 0ms return). A forced refresh exists

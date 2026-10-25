@@ -82,10 +82,10 @@ class MusicWidgetReceiver : AppWidgetProvider() {
     }
 
     companion object {
-        const val ACTION_PLAY_PAUSE = "com.jay.glossy.widget.PLAY_PAUSE"
-        const val ACTION_LIKE = "com.jay.glossy.widget.LIKE"
-        const val ACTION_NEXT = "com.jay.glossy.widget.NEXT"
-        const val ACTION_PREVIOUS = "com.jay.glossy.widget.PREVIOUS"
-        const val ACTION_UPDATE_WIDGET = "com.jay.glossy.widget.UPDATE_WIDGET"
+        const val ACTION_PLAY_PAUSE = "com.jay.glossyw.widget.PLAY_PAUSE"
+        const val ACTION_LIKE = "com.jay.glossyw.widget.LIKE"
+        const val ACTION_NEXT = "com.jay.glossyw.widget.NEXT"
+        const val ACTION_PREVIOUS = "com.jay.glossyw.widget.PREVIOUS"
+        const val ACTION_UPDATE_WIDGET = "com.jay.glossyw.widget.UPDATE_WIDGET"
     }
 }

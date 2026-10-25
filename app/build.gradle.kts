@@ -19,7 +19,7 @@ if (localPropertiesFile.exists()) {
     localProperties.load(localPropertiesFile.inputStream())
 }
 
-val baseApplicationId = "com.jay.glossy"
+val baseApplicationId = "com.jay.glossyw"
 val applicationIdOverride = System.getenv("GLOSSY_APPLICATION_ID")?.takeIf { it.isNotBlank() }
 val appNameOverride = System.getenv("GLOSSY_APP_NAME")?.takeIf { it.isNotBlank() }
 val debugKeystorePathOverride = System.getenv("GLOSSY_DEBUG_KEYSTORE_PATH")?.takeIf { it.isNotBlank() }
@@ -104,7 +104,7 @@ android {
         targetSdk = 36
         versionCode = 5
         versionName = "0.0.5"
-        resValue("string", "app_name", appNameOverride ?: "Glossy")
+        resValue("string", "app_name", appNameOverride ?: "GlossyW")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -224,7 +224,7 @@ android {
             }
             isDebuggable = true
             if (appNameOverride == null) {
-                resValue("string", "app_name", "Glossy Debug")
+                resValue("string", "app_name", "GlossyW Debug")
             }
             signingConfig =
                 if (workflowDebugKeystoreFile != null) {
@@ -442,6 +442,7 @@ dependencies {
     implementation(project(":unison"))
     implementation(project(":simpmusic"))
     implementation(project(":netease"))
+    implementation(project(":musixmatch"))
     implementation(project(":canvas"))
     implementation(project(":applecanvas"))
 

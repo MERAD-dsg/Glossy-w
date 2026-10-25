@@ -253,10 +253,10 @@ import androidx.compose.ui.platform.LocalContext
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     companion object {
-        private const val ACTION_SEARCH = "com.jay.glossy.action.SEARCH"
-        private const val ACTION_LIBRARY = "com.jay.glossy.action.LIBRARY"
-        const val ACTION_RECOGNITION = "com.jay.glossy.action.RECOGNITION"
-        const val ACTION_OPEN_WIDGET_TARGET = "com.jay.glossy.action.OPEN_WIDGET_TARGET"
+        private const val ACTION_SEARCH = "com.jay.glossyw.action.SEARCH"
+        private const val ACTION_LIBRARY = "com.jay.glossyw.action.LIBRARY"
+        const val ACTION_RECOGNITION = "com.jay.glossyw.action.RECOGNITION"
+        const val ACTION_OPEN_WIDGET_TARGET = "com.jay.glossyw.action.OPEN_WIDGET_TARGET"
         const val EXTRA_AUTO_START_RECOGNITION = "auto_start_recognition"
         const val EXTRA_WIDGET_TARGET_TYPE = "widget_target_type"
         const val EXTRA_WIDGET_TARGET_ID = "widget_target_id"

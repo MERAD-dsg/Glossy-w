@@ -34,6 +34,6 @@ class MusicAlarmReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val ACTION_TRIGGER_ALARM = "com.jay.glossy.action.TRIGGER_ALARM"
+        const val ACTION_TRIGGER_ALARM = "com.jay.glossyw.action.TRIGGER_ALARM"
     }
 }

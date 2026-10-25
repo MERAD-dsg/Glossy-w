@@ -59,8 +59,8 @@ jobs:
         run: ./gradlew --console=plain assembleFossDebug :app:lintFossDebug --warning-mode summary
         env:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
-          GLOSSY_APPLICATION_ID: com.jay.glossy.pr.manual
-          GLOSSY_APP_NAME: GLOSSY PR Manual
+          GLOSSY_APPLICATION_ID: com.jay.glossyw.pr.manual
+          GLOSSY_APP_NAME: GlossyW PR Manual
           GLOSSY_DEBUG_KEYSTORE_PATH: pr-debug.keystore
           PULL_REQUEST: "false"
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}

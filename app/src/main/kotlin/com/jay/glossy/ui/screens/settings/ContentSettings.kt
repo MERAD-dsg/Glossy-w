@@ -73,6 +73,7 @@ import com.jay.glossy.constants.EnableBiniLyricsKey
 import com.jay.glossy.constants.EnableSimpMusicKey
 import com.jay.glossy.constants.EnableNetEaseKey
 import com.jay.glossy.constants.EnableMegalobizKey
+import com.jay.glossy.constants.EnableMusixmatchKey
 import com.jay.glossy.constants.EnableSpotifyLyricsKey
 import com.jay.glossy.constants.HideExplicitKey
 import com.jay.glossy.constants.HideVideoSongsKey
@@ -141,6 +142,7 @@ fun ContentSettings(
     val (enableSimpMusic, onEnableSimpMusicChange) = rememberPreference(key = EnableSimpMusicKey, defaultValue = true)
     val (enableNetEase, onEnableNetEaseChange) = rememberPreference(key = EnableNetEaseKey, defaultValue = true)
     val (enableMegalobiz, onEnableMegalobizChange) = rememberPreference(key = EnableMegalobizKey, defaultValue = true)
+    val (enableMusixmatch, onEnableMusixmatchChange) = rememberPreference(key = EnableMusixmatchKey, defaultValue = true)
     val (spotifyCookie) = rememberPreference(key = SpotifySession.CookieKey, defaultValue = "")
 
     val (enableSpotifyLyrics, onEnableSpotifyLyricsChange) =
@@ -201,6 +203,7 @@ fun ContentSettings(
             "BiniLyrics" to "Bini Lyrics",
             "SimpMusic" to "SimpMusic",
             "NetEase" to "NetEase Music",
+            "Musixmatch" to "Musixmatch",
             "Megalobiz" to "Megalobiz",
             "YouTubeSubtitle" to "YouTube Subtitles",
             "YouTube" to "YouTube",
@@ -426,6 +429,35 @@ fun ContentSettings(
                                 Icon(
                                     painter = painterResource(
                                         id = if (enableNetEase) R.drawable.check else R.drawable.close
+                                    ),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(SwitchDefaults.IconSize)
+                                )
+                            }
+                        )
+                    }
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Column(
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text(stringResource(R.string.enable_musixmatch))
+                            Text(
+                                text = stringResource(R.string.enable_musixmatch_desc),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Switch(
+                            checked = enableMusixmatch,
+                            onCheckedChange = onEnableMusixmatchChange,
+                            thumbContent = {
+                                Icon(
+                                    painter = painterResource(
+                                        id = if (enableMusixmatch) R.drawable.check else R.drawable.close
                                     ),
                                     contentDescription = null,
                                     modifier = Modifier.size(SwitchDefaults.IconSize)
@@ -846,6 +878,7 @@ fun ContentSettings(
         // YouTube rows are not here: they are always asked and carry no switch.
         val providerSwitches: Map<String, Pair<Boolean, (Boolean) -> Unit>> = mapOf(
             "NetEase" to (enableNetEase to onEnableNetEaseChange),
+            "Musixmatch" to (enableMusixmatch to onEnableMusixmatchChange),
             "Spotify" to (enableSpotifyLyrics to onEnableSpotifyLyricsChange),
             "YouLyPlus" to (enableYouLyPlus to onEnableYouLyPlusChange),
             "Unison" to (enableUnison to onEnableUnisonChange),

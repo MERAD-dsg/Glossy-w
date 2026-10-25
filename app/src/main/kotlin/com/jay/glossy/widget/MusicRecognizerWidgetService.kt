@@ -345,8 +345,8 @@ class MusicRecognizerWidgetService : Service() {
     // ─── Constants ────────────────────────────────────────────────────────────
 
     companion object {
-        const val ACTION_START_RECOGNITION = "com.jay.glossy.widget.recognizer.START"
-        const val ACTION_STOP_RECOGNITION = "com.jay.glossy.widget.recognizer.STOP"
+        const val ACTION_START_RECOGNITION = "com.jay.glossyw.widget.recognizer.START"
+        const val ACTION_STOP_RECOGNITION = "com.jay.glossyw.widget.recognizer.STOP"
 
         const val PREFS_NAME = "recognizer_widget_prefs"
         const val PREF_STATE = "state"

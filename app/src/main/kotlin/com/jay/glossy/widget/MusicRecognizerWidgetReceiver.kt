@@ -334,8 +334,8 @@ class MusicRecognizerWidgetReceiver : AppWidgetProvider() {
         )
 
     companion object {
-        const val ACTION_START_RECOGNITION = "com.jay.glossy.widget.recognizer.TAP_MIC"
-        const val ACTION_UPDATE_WIDGET = "com.jay.glossy.widget.recognizer.UPDATE"
-        const val ACTION_RESET_STATE = "com.jay.glossy.widget.recognizer.RESET"
+        const val ACTION_START_RECOGNITION = "com.jay.glossyw.widget.recognizer.TAP_MIC"
+        const val ACTION_UPDATE_WIDGET = "com.jay.glossyw.widget.recognizer.UPDATE"
+        const val ACTION_RESET_STATE = "com.jay.glossyw.widget.recognizer.RESET"
     }
 }

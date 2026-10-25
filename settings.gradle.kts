@@ -41,6 +41,7 @@ include(":youlyplus")
 include(":unison")
 include(":simpmusic")
 include(":netease")
+include(":musixmatch")
 
 
 // SeaGlass publishes no artifacts, so its two library modules are built here

@@ -127,4 +127,6 @@
     <string name="sponsor_block_category_filler">Filler</string>
     <string name="sponsor_block_category_interaction">Interaction reminders</string>
     <string name="sponsor_block_category_hook">Hooks</string>
+    <string name="enable_musixmatch">Enable Musixmatch lyrics provider</string>
+    <string name="enable_musixmatch_desc">Synced lyrics from Musixmatch, with word-by-word timing when available</string>
 </resources>
