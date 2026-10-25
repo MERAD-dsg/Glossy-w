@@ -57,7 +57,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -400,7 +399,7 @@ fun VinylNowPlaying(
         modifier = modifier
             .fillMaxSize()
             .background(vinylBase)
-            .statusBarsPadding(),
+            .stableStatusBarsPadding(),
     ) {
         if (showLyrics) {
             Box(
@@ -2120,7 +2119,7 @@ fun CapsuleNowPlaying(
                     )
                 },
             )
-            .statusBarsPadding(),
+            .stableStatusBarsPadding(),
     ) {
         if (showLyrics) {
             Box(
@@ -2550,7 +2549,7 @@ fun CinematicNowPlaying(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
+                .stableStatusBarsPadding()
                 .padding(top = 6.dp)
                 .padding(bottom = bottomInset),
         ) {

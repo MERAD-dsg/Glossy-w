@@ -70,7 +70,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -227,7 +226,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.max
 import kotlin.math.roundToInt
 import com.jay.glossy.ui.component.Icon as MIcon
 
@@ -265,6 +263,7 @@ fun BottomSheetPlayer(
 
     var showInlineLyrics by rememberSaveable { mutableStateOf(false) }
     var isFullScreen by rememberSaveable { mutableStateOf(false) }
+    val stableStatusBarHeight = rememberStableStatusBarHeight()
 
     val playerBackground by rememberEnumPreference(key = PlayerBackgroundStyleKey, defaultValue = PlayerBackgroundStyle.DEFAULT)
     val playerButtonsStyle by rememberEnumPreference(key = PlayerButtonsStyleKey, defaultValue = PlayerButtonsStyle.DEFAULT)
@@ -1599,12 +1598,11 @@ fun BottomSheetPlayer(
             when (LocalConfiguration.current.orientation) {
                 Configuration.ORIENTATION_LANDSCAPE -> {
                     val density = LocalDensity.current
-                    val verticalPadding =
-                        max(
-                            WindowInsets.systemBars.getTop(density),
-                            WindowInsets.systemBars.getBottom(density),
+                    val verticalPaddingDp =
+                        maxOf(
+                            stableStatusBarHeight,
+                            with(density) { WindowInsets.systemBars.getBottom(density).toDp() },
                         )
-                    val verticalPaddingDp = with(density) { verticalPadding.toDp() }
                     val verticalWindowInsets = WindowInsets(left = 0.dp, top = verticalPaddingDp, right = 0.dp, bottom = verticalPaddingDp)
 
                     Row(
@@ -1670,7 +1668,7 @@ fun BottomSheetPlayer(
                             modifier = Modifier
                                 .weight(if (showInlineLyrics) 0.65f else 1f, false)
                                 .animateContentSize()
-                                .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Top)),
+                                .stableStatusBarsPadding(),
                         ) {
                             Spacer(Modifier.weight(1f))
 

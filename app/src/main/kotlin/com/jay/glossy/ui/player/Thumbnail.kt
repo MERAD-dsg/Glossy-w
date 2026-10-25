@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
@@ -531,7 +530,7 @@ fun Thumbnail(
             exit = fadeOut(),
             modifier = Modifier
                 .fillMaxSize()
-                .then(if (!isLandscape) Modifier.statusBarsPadding() else Modifier),
+                .then(if (!isLandscape) Modifier.stableStatusBarsPadding() else Modifier),
         ) {
             Column(
                 modifier = Modifier.fillMaxSize(),
