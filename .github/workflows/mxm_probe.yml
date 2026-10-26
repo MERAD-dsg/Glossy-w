@@ -68,8 +68,10 @@ jobs:
           for label, secret in [("scraped", scraped), ("fallback", FALLBACK)]:
               if not secret:
                   continue
+              for hv in [{"Accept": "application/json"}, {"Accept": "application/json", "Cookie": "mxm_bab=AB", "Origin": "https://www.musixmatch.com", "Referer": "https://www.musixmatch.com/"}]:
+                  st, body = get(sign(f"{BASE}token.get?app_id=mobile-app-v1.0&guid={guid}&format=json", secret), hv)
+                  print(f"[{label}] token.get HTTP {st} headers={sorted(hv)}: {body[:120]!r}")
               st, body = get(sign(f"{BASE}token.get?app_id=mobile-app-v1.0&guid={guid}&format=json", secret), {"Accept": "application/json"})
-              print(f"[{label}] token.get HTTP {st}: {body[:200]}")
               try:
                   token = json.loads(body)["message"]["body"]["user_token"]
               except Exception:
@@ -91,5 +93,11 @@ jobs:
                   print(f"[{label}] {path} HTTP {st} status_code={code} len={len(body)}")
               break
           PY
-          python3 probe.py 2>&1 | while IFS= read -r line; do echo "::notice::$line"; done
+          python3 probe.py > probe_out.txt 2>&1 || true
+          python3 - <<'PY'
+          import urllib.parse
+          text = open("probe_out.txt", encoding="utf-8", errors="replace").read()
+          text = text[:20000]
+          print("::notice::" + text.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A"))
+          PY
 
