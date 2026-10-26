@@ -1,0 +1,95 @@
+name: Musixmatch probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["arena/1e59b826-glossy-w"]
+    paths: [".github/workflows/mxm_probe.yml"]
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe Musixmatch API
+        run: |
+          cat > probe.py <<'PY'
+          import base64, hmac, hashlib, re, json, urllib.parse, urllib.request, uuid, datetime
+
+          UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+          BASE = "https://apic.musixmatch.com/ws/1.1/"
+          FALLBACK = "b3dc8788299f5806a70a6a20a0cb0ffc"
+
+          def get(url, headers=None):
+              h = {"User-Agent": UA, "Accept-Language": "en-US,en;q=0.9"}
+              h.update(headers or {})
+              req = urllib.request.Request(url, headers=h)
+              try:
+                  with urllib.request.urlopen(req, timeout=20) as r:
+                      return r.status, r.read().decode("utf-8", "replace")
+              except urllib.error.HTTPError as e:
+                  return e.code, e.read().decode("utf-8", "replace")
+              except Exception as e:
+                  return -1, repr(e)
+
+          def sign(url, secret):
+              url = url.replace("%20", "+").replace(" ", "+")
+              date = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d")
+              sig = base64.b64encode(hmac.new(secret.encode(), (url + date).encode(), hashlib.sha256).digest()).decode()
+              return f"{url}&signature={urllib.parse.quote_plus(sig)}&signature_protocol=sha256"
+
+          def api(path, secret):
+              st, body = get(sign(BASE + path, secret), {"Accept": "application/json, text/plain, */*"})
+              try:
+                  j = json.loads(body)
+                  code = j["message"]["header"].get("status_code")
+              except Exception:
+                  code = "unparsed"
+              return st, code, body
+
+          st, page = get("https://www.musixmatch.com/search", {"Cookie": "mxm_bab=AB", "Accept": "text/html"})
+          print("search page:", st, len(page))
+          m = re.search(r'src="([^"]*/_next/static/chunks/pages/_app-[^"]+\.js)"', page)
+          print("app script found:", bool(m), m.group(1) if m else "")
+          scraped = None
+          if m:
+              url = m.group(1) if m.group(1).startswith("http") else "https://www.musixmatch.com" + m.group(1)
+              st2, js = get(url)
+              print("app script:", st2, len(js))
+              s = re.search(r'from\(\s*"(.*?)"\s*\.split', js)
+              print("secret pattern found:", bool(s))
+              if s:
+                  try:
+                      scraped = base64.b64decode(s.group(1)[::-1]).decode()
+                      print("scraped secret length:", len(scraped), "fallback equal:", scraped == FALLBACK)
+                  except Exception as e:
+                      print("decode failed:", repr(e))
+
+          guid = str(uuid.uuid4())
+          for label, secret in [("scraped", scraped), ("fallback", FALLBACK)]:
+              if not secret:
+                  continue
+              st, body = get(sign(f"{BASE}token.get?app_id=mobile-app-v1.0&guid={guid}&format=json", secret), {"Accept": "application/json"})
+              print(f"[{label}] token.get HTTP {st}: {body[:200]}")
+              try:
+                  token = json.loads(body)["message"]["body"]["user_token"]
+              except Exception:
+                  token = None
+              if not token:
+                  continue
+              q = "track.search?app_id=mobile-app-v1.0&format=json&q_track=Blinding%20Lights&q_artist=The%20Weeknd&f_has_lyrics=true&page_size=10&usertoken=" + token
+              st, code, body = api(q, secret)
+              print(f"[{label}] track.search HTTP {st} status_code={code} len={len(body)}")
+              try:
+                  tracks = json.loads(body)["message"]["body"]["track_list"]
+                  tid = tracks[0]["track"]["track_id"]
+                  print(f"[{label}] first track_id={tid} name={tracks[0]['track']['track_name']}")
+              except Exception as e:
+                  print(f"[{label}] no track: {e}")
+                  continue
+              for path in ["track.richsync.get", "track.subtitle.get", "track.lyrics.get"]:
+                  st, code, body = api(f"{path}?app_id=mobile-app-v1.0&format=json&track_id={tid}&usertoken={token}", secret)
+                  print(f"[{label}] {path} HTTP {st} status_code={code} len={len(body)}")
+              break
+          PY
+          python3 probe.py
+
